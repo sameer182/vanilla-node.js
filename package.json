@@ -1,0 +1,15 @@
+{
+  "name": "vanilla-node",
+  "version": "1.0.0",
+  "description": "pure node.js app",
+  "main": "server.js",
+  "type":"module",
+  "scripts": {
+    "start": "nodemon --env-file=.env server.js"
+  },
+  "author": "Sameer Limbu",
+  "license": "MIT",
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  }
+}

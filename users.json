@@ -1,0 +1,52 @@
+[
+  {
+    "id": 1,
+    "name": "Juggernaut",
+    "role": "carry"
+  },
+  {
+    "id": 2,
+    "name": "Tinker",
+    "role": "solo"
+  },
+  {
+    "id": 3,
+    "name": "Axe",
+    "role": "tanker"
+  },
+  {
+    "id": 4,
+    "name": "Ember Spirit",
+    "role": "carry"
+  },
+  {
+    "id": 5,
+    "name": "Earthshaker",
+    "role": "tanker"
+  },
+  {
+    "id": 6,
+    "name": "Invoker",
+    "role": "solo"
+  },
+  {
+    "id": 7,
+    "name": "Pudge",
+    "role": "tanker"
+  },
+  {
+    "id": 8,
+    "name": "Rikimaru",
+    "role": "carry"
+  },
+  {
+    "id": 9,
+    "name": "Anti mage",
+    "role": "carry"
+  },
+  {
+    "id": 10,
+    "name": "Ember spirit",
+    "role": "carry"
+  }
+]

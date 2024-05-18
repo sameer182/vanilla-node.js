@@ -1,16 +1,27 @@
 import { createServer } from "http";
+import fs from 'fs';
 
 const PORT = process.env.PORT;
 
-// Example hard coded users
-const users = [
-    { id: 1, name: "Juggernaut", role: "carry" },
-    { id: 2, name: "Tinker", role: "solo"},
-    { id: 3, name: "Axe", role: "tanker"},
-    { id: 4, name: "Ember Spirit", role: "carry"},
-    { id: 5, name: "Earthshaker", role: "tanker"},  
-    { id: 6, name: "Invoker", role: "solo"},  
-];
+// Function to save users to a file
+const saveUsersToFile = () => {
+    fs.writeFileSync('users.json', JSON.stringify(users, null, 2));
+}
+
+// Read users from a file when server starts
+let users = [];
+
+// Check if users.json file exists, if not create it with initial users
+if (fs.existsSync('users.json')) {
+    try {
+        const data = fs.readFileSync('users.json', 'utf8');
+        users = JSON.parse(data);
+    } catch (err) {
+        console.error('Error reading users file:', err);
+    }
+} else {
+    saveUsersToFile();
+}
 
 // Logger middleware
 const logger = (req, res, next) => {
@@ -57,6 +68,30 @@ const getUserRoleHandler = (req, res) => {
     res.end();
 };
 
+// Route handler for POST /api/users
+const createUserHandler = (req, res) => {
+    let body = '';
+    req.on('data', (chunk) => {
+        body += chunk.toString();
+    });
+    req.on('end', () => {
+    const newUser = JSON.parse(body);
+    // Check if the ID already exists
+    const existingUser = users.find(user => user.id === newUser.id);
+    if (existingUser) {
+        res.statusCode = 400;
+        res.write(JSON.stringify({ message: "User's Id already exists" }));
+        res.end()
+    } else {
+        users.push(newUser);
+        saveUsersToFile();
+        res.statusCode = 201;
+        res.write(JSON.stringify({ user: newUser, message: "User successfully created"}));
+        res.end();
+    }
+    });
+};
+
 // Route not found handler
 const noRouteHandler = (req, res) => {
     res.statusCode = 404;
@@ -77,6 +112,8 @@ const server = createServer((req, res) => {
             // Define route for :role using regular expression
             } else if (req.url.match(/\/api\/users\/([a-z]+)/) && req.method === 'GET') {
               getUserRoleHandler(req, res);
+            } else if (req.url === '/api/users' && req.method === 'POST') {
+              createUserHandler(req, res);
             } else {
                noRouteHandler(req, res);
             }

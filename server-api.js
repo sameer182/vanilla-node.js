@@ -86,11 +86,28 @@ const createUserHandler = (req, res) => {
         users.push(newUser);
         saveUsersToFile();
         res.statusCode = 201;
-        res.write(JSON.stringify({ user: newUser, message: "User successfully created"}));
+        res.write(JSON.stringify({ message: "User successfully created", user: newUser}));
         res.end();
     }
     });
 };
+
+// Route handle for DELETE using :id
+const deleteUserHandler = (req, res) => {
+    const id = req.url.split('/')[3];
+    const userIndex = users.findIndex((user) => user.id === parseInt(id));
+    // Checks if there is user
+    if (userIndex !== -1) {
+        const deletedUser = users.splice(userIndex, 1)[0];
+        saveUsersToFile();
+        res.statusCode = 200;
+        res.write(JSON.stringify({ message: "User deleted successfully", user: deletedUser }));
+    } else {
+        res.statusCode = 404;
+        res.write(JSON.stringify({ message: "User not found" }));
+    }
+    res.end();
+}
 
 // Route not found handler
 const noRouteHandler = (req, res) => {
@@ -112,8 +129,11 @@ const server = createServer((req, res) => {
             // Define route for :role using regular expression
             } else if (req.url.match(/\/api\/users\/([a-z]+)/) && req.method === 'GET') {
               getUserRoleHandler(req, res);
+            // Define route for POST new users
             } else if (req.url === '/api/users' && req.method === 'POST') {
               createUserHandler(req, res);
+            } else if (req.url.match(/\/api\/users\/([0-9]+)/) && req.method === 'DELETE') {
+                deleteUserHandler(req, res);
             } else {
                noRouteHandler(req, res);
             }

@@ -1,3 +1,8 @@
+/**
+ *  RESTful API 
+ *  Handles GET, POST, DELETE http methods
+ */
+
 import { createServer } from "http";
 import fs from 'fs';
 
